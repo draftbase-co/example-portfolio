@@ -180,6 +180,8 @@ has to guess whether their morning's work made it home.`,
 
 async function main() {
 	for (const template of templates) await ensureTemplate(template);
+	// The CLI (`npm create draftbase`) seeds schema only, so a new project starts empty.
+	if (process.env.SEED_TEMPLATES_ONLY) return;
 
 	const avatar = await uploadImage(
 		"https://picsum.photos/seed/avatar/400/400",
