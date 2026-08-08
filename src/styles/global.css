@@ -1,0 +1,120 @@
+:root {
+	--bg: #ffffff;
+	--fg: #14161a;
+	--muted: #5c6370;
+	--line: #e6e8ec;
+	--accent: #3b5bdb;
+	color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #0f1115;
+		--fg: #e9ecf1;
+		--muted: #9aa3b2;
+		--line: #23272f;
+		--accent: #8ba2ff;
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--fg);
+	font: 16px/1.65 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.wrap {
+	max-width: 46rem;
+	margin: 0 auto;
+	padding: 3rem 1.25rem 5rem;
+}
+
+a {
+	color: var(--accent);
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	border-radius: 10px;
+}
+
+.muted {
+	color: var(--muted);
+}
+
+header.site {
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+	margin-bottom: 2.5rem;
+}
+
+header.site img {
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+h1 {
+	font-size: 1.9rem;
+	margin: 0 0 0.25rem;
+	line-height: 1.2;
+}
+
+.projects {
+	display: grid;
+	gap: 1.75rem;
+	list-style: none;
+	padding: 0;
+}
+
+.project h2 {
+	font-size: 1.15rem;
+	margin: 0.75rem 0 0.25rem;
+}
+
+.project a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.project a:hover h2 {
+	text-decoration: underline;
+}
+
+.tagline {
+	display: inline-block;
+	font-size: 0.75rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	padding: 0.1rem 0.55rem;
+	color: var(--muted);
+}
+
+footer.site {
+	margin-top: 4rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--line);
+	font-size: 0.875rem;
+	color: var(--muted);
+}
+
+/* Rich text rendered by @draftbase/renderer's toHtml() */
+.db-content :is(h2, h3) {
+	margin-top: 2rem;
+}
+
+.db-content pre {
+	overflow-x: auto;
+	padding: 1rem;
+	background: rgba(127, 127, 127, 0.12);
+	border-radius: 8px;
+}

@@ -1,0 +1,60 @@
+---
+import { toHtml } from "@draftbase/renderer";
+import Base from "../layouts/Base.astro";
+import { getAll, url, type Profile, type Project } from "../lib/draftbase";
+
+const [profile] = await getAll<Profile>("profile");
+const projects = (await getAll<Project>("project")).sort(
+	(a, b) => (b.fields.year ?? 0) - (a.fields.year ?? 0),
+);
+const bio = profile ? await toHtml(profile.fields.bio) : "";
+---
+
+<Base title={profile?.fields.name ?? "Portfolio"} description={profile?.fields.headline}>
+	{
+		profile && (
+			<header class="site">
+				{profile.fields.avatar?.url && (
+					<img
+						src={profile.fields.avatar.url}
+						alt={profile.fields.avatar.altText ?? profile.fields.name}
+					/>
+				)}
+				<div>
+					<h1>{profile.fields.name}</h1>
+					<p class="muted" style="margin:0">
+						{profile.fields.headline}
+					</p>
+				</div>
+			</header>
+		)
+	}
+
+	<div class="db-content" set:html={bio} />
+
+	<h2 style="margin-top:3rem">Work</h2>
+	<ul class="projects">
+		{
+			projects.map((project) => (
+				<li class="project">
+					<a href={url(`projects/${project.fields.slug}`)}>
+						{project.fields.cover?.url && (
+							<img
+								src={project.fields.cover.url}
+								alt={project.fields.cover.altText ?? project.fields.title}
+								loading="lazy"
+							/>
+						)}
+						<h2>{project.fields.title}</h2>
+						<p class="muted" style="margin:0">
+							{project.fields.summary}
+						</p>
+					</a>
+					{project.fields.year && <span class="tagline">{project.fields.year}</span>}
+				</li>
+			))
+		}
+	</ul>
+
+	{projects.length === 0 && <p class="muted">No published projects yet. Run <code>npm run seed</code>.</p>}
+</Base>

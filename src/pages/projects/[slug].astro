@@ -1,0 +1,42 @@
+---
+import { toHtml } from "@draftbase/renderer";
+import Base from "../../layouts/Base.astro";
+import { getAll, type Project } from "../../lib/draftbase";
+
+export async function getStaticPaths() {
+	const projects = await getAll<Project>("project");
+	return projects.map((project) => ({
+		params: { slug: project.fields.slug },
+		props: { project },
+	}));
+}
+
+const { project } = Astro.props;
+const body = await toHtml(project.fields.body ?? "");
+---
+
+<Base title={project.fields.title} description={project.fields.summary}>
+	<h1>{project.fields.title}</h1>
+	<p class="muted">
+		{project.fields.year}
+		{
+			project.fields.liveUrl && (
+				<>
+					{" · "}
+					<a href={project.fields.liveUrl} rel="noopener noreferrer">
+						Visit site
+					</a>
+				</>
+			)
+		}
+	</p>
+	{
+		project.fields.cover?.url && (
+			<img
+				src={project.fields.cover.url}
+				alt={project.fields.cover.altText ?? project.fields.title}
+			/>
+		)
+	}
+	<div class="db-content" set:html={body} />
+</Base>
