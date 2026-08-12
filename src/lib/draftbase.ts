@@ -53,6 +53,12 @@ export interface Project {
 	featured?: boolean;
 }
 
+export interface Faq {
+	question: string;
+	answer: string;
+	order?: number;
+}
+
 export interface Profile {
 	name: string;
 	headline: string;

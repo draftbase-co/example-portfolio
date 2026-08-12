@@ -12,6 +12,7 @@
 		"seed": "node --env-file=.env scripts/seed.mjs"
 	},
 	"dependencies": {
+		"@astrojs/sitemap": "^3.7.3",
 		"@draftbase/renderer": "^0.3.2",
 		"@draftbase/sdk": "^0.2.3",
 		"astro": "^5.1.0",

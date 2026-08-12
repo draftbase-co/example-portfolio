@@ -1,19 +1,70 @@
+/* Design tokens from the Draftbase example design system, inlined so this project has no
+   external stylesheet or component dependency to install. */
+@font-face {
+	font-family: "Inter";
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2)
+		format("woff2");
+}
+
 :root {
-	--bg: #ffffff;
-	--fg: #14161a;
-	--muted: #5c6370;
-	--line: #e6e8ec;
-	--accent: #3b5bdb;
+	--bg-page: #f7f8fa;
+	--bg-surface: #ffffff;
+	--bg-sunken: #eef1f5;
+	--footer-bg: #171a21;
+	--text-primary: #171a21;
+	--text-secondary: #5b6472;
+	--text-tertiary: #6b7280;
+	--footer-text: #8b93a1;
+	--border-subtle: #e6e9ee;
+	--border-default: #d8dce3;
+	--accent: #2f6fe4;
+	--accent-hover: #255cc2;
+	--accent-active: #1d499d;
+	--accent-subtle: #eaf1fe;
+	--accent-on: #ffffff;
+	--font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+	--text-xs: 12px;
+	--text-sm: 13.5px;
+	--text-base: 15px;
+	--text-lg: 20px;
+	--text-xl: 24px;
+	--text-2xl: 30px;
+	--text-3xl: 38px;
+	--text-4xl: 48px;
+	--leading-tight: 1.15;
+	--leading-relaxed: 1.7;
+	--tracking-tight: -0.02em;
+	--tracking-wide: 0.02em;
+	--radius-md: 10px;
+	--radius-lg: 14px;
+	--radius-full: 999px;
+	--shadow-sm: 0 1px 2px rgba(36, 28, 21, 0.06);
+	--shadow-md: 0 4px 12px rgba(36, 28, 21, 0.08), 0 1px 2px rgba(36, 28, 21, 0.05);
+	--container-max: 1120px;
 	color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--bg: #0f1115;
-		--fg: #e9ecf1;
-		--muted: #9aa3b2;
-		--line: #23272f;
-		--accent: #8ba2ff;
+		--bg-page: #0e1015;
+		--bg-surface: #171a21;
+		--bg-sunken: #0e1015;
+		--text-primary: #f7f8fa;
+		--text-secondary: #b8bfc9;
+		--text-tertiary: #8b93a1;
+		--border-subtle: #2b303a;
+		--border-default: #434a56;
+		--accent-subtle: #152a4d;
+		/* Accents are re-lightened for dark: the light-theme blues sit at 1.7:1 on the dark
+		   surfaces, well under WCAG AA. */
+		--accent: #6fa1f5;
+		--accent-hover: #a8c7fb;
+		--accent-active: #a8c7fb;
+		--accent-on: #0e1015;
 	}
 }
 
@@ -23,91 +74,296 @@
 
 body {
 	margin: 0;
-	background: var(--bg);
-	color: var(--fg);
-	font: 16px/1.65 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-}
-
-.wrap {
-	max-width: 46rem;
-	margin: 0 auto;
-	padding: 3rem 1.25rem 5rem;
+	background: var(--bg-page);
+	color: var(--text-primary);
+	font-family: var(--font-sans);
+	font-size: var(--text-base);
+	line-height: 1.55;
+	-webkit-font-smoothing: antialiased;
 }
 
 a {
 	color: var(--accent);
 }
 
+a:hover {
+	color: var(--accent-hover);
+}
+
+code,
+pre {
+	font-family: var(--font-mono);
+}
+
 img {
 	max-width: 100%;
 	height: auto;
 	display: block;
-	border-radius: 10px;
+	border-radius: var(--radius-md);
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: var(--tracking-tight);
+	line-height: var(--leading-tight);
 }
 
 .muted {
-	color: var(--muted);
+	color: var(--text-secondary);
+}
+
+.wrap {
+	max-width: var(--container-max);
+	margin: 0 auto;
+	padding: 0 24px;
+}
+
+/* Chrome ------------------------------------------------------------------ */
+
+.banner {
+	background: var(--accent-subtle);
+	color: var(--accent-active);
+	text-align: center;
+	padding: 10px 16px;
+	font-size: var(--text-sm);
+	font-weight: 500;
+}
+
+.banner a {
+	color: var(--accent-active);
+	font-weight: 600;
 }
 
 header.site {
-	display: flex;
-	gap: 1rem;
-	align-items: center;
-	margin-bottom: 2.5rem;
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	background: var(--bg-surface);
+	border-bottom: 1px solid var(--border-subtle);
 }
 
-header.site img {
-	width: 64px;
-	height: 64px;
-	border-radius: 50%;
+header.site > div {
+	max-width: var(--container-max);
+	margin: 0 auto;
+	padding: 16px 24px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 16px;
+}
+
+header.site .brand {
+	font-weight: 700;
+	font-size: var(--text-lg);
+	letter-spacing: var(--tracking-tight);
+	color: var(--text-primary);
+	text-decoration: none;
+}
+
+header.site nav {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	flex-wrap: wrap;
+}
+
+header.site nav a {
+	color: var(--text-secondary);
+	text-decoration: none;
+	font-size: var(--text-sm);
+}
+
+header.site nav a:hover {
+	color: var(--text-primary);
+}
+
+footer.site {
+	background: var(--footer-bg);
+	color: var(--footer-text);
+	padding: 32px 24px;
+	text-align: center;
+	font-size: var(--text-sm);
+}
+
+footer.site p {
+	margin: 0 0 6px;
+}
+
+footer.site a {
+	color: var(--footer-text);
+	text-decoration: underline;
+}
+
+/* Components -------------------------------------------------------------- */
+
+.hero {
+	max-width: var(--container-max);
+	margin: 0 auto;
+	padding: 64px 24px 48px;
+	display: flex;
+	gap: 32px;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.hero img {
+	width: 96px;
+	height: 96px;
+	border-radius: var(--radius-full);
 	object-fit: cover;
 }
 
-h1 {
-	font-size: 1.9rem;
-	margin: 0 0 0.25rem;
-	line-height: 1.2;
+.hero h1 {
+	font-size: var(--text-4xl);
+	font-weight: 700;
+	margin: 0 0 12px;
+}
+
+.hero p {
+	font-size: var(--text-lg);
+	color: var(--text-secondary);
+	line-height: var(--leading-relaxed);
+	margin: 0 0 20px;
+	max-width: 520px;
+}
+
+.section-title {
+	font-size: var(--text-3xl);
+	font-weight: 700;
+	margin: 0 0 32px;
+	text-align: center;
 }
 
 .projects {
 	display: grid;
-	gap: 1.75rem;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: 20px;
 	list-style: none;
 	padding: 0;
+	margin: 0;
 }
 
-.project h2 {
-	font-size: 1.15rem;
-	margin: 0.75rem 0 0.25rem;
+.project {
+	background: var(--bg-surface);
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-sm);
+	overflow: hidden;
+	transition: box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project:hover {
+	box-shadow: var(--shadow-md);
 }
 
 .project a {
 	text-decoration: none;
 	color: inherit;
+	display: block;
 }
 
-.project a:hover h2 {
-	text-decoration: underline;
+.project img {
+	border-radius: 0;
+	aspect-ratio: 16 / 10;
+	object-fit: cover;
+	width: 100%;
+}
+
+.project .body {
+	padding: 16px;
+}
+
+.project h3 {
+	font-size: var(--text-base);
+	font-weight: 600;
+	margin: 0 0 6px;
+}
+
+.project p {
+	font-size: var(--text-sm);
+	color: var(--text-tertiary);
+	margin: 0;
 }
 
 .tagline {
 	display: inline-block;
-	font-size: 0.75rem;
-	border: 1px solid var(--line);
-	border-radius: 999px;
-	padding: 0.1rem 0.55rem;
-	color: var(--muted);
+	font-size: var(--text-xs);
+	font-weight: 600;
+	letter-spacing: var(--tracking-wide);
+	text-transform: uppercase;
+	background: var(--accent-subtle);
+	color: var(--accent-active);
+	border-radius: var(--radius-full);
+	padding: 3px 10px;
 }
 
-footer.site {
-	margin-top: 4rem;
-	padding-top: 1.5rem;
-	border-top: 1px solid var(--line);
-	font-size: 0.875rem;
-	color: var(--muted);
+.panel {
+	background: var(--bg-sunken);
+}
+
+.panel > div {
+	max-width: 640px;
+	margin: 0 auto;
+	padding: 48px 24px;
+	text-align: center;
+}
+
+.button {
+	display: inline-block;
+	background: var(--accent);
+	color: var(--accent-on);
+	border-radius: var(--radius-md);
+	padding: 11px 20px;
+	font-size: var(--text-base);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.button:hover {
+	background: var(--accent-hover);
+	color: var(--accent-on);
+}
+
+.faq {
+	max-width: 700px;
+	margin: 0 auto;
+	padding: 56px 24px;
+}
+
+.faq details {
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-md);
+	padding: 16px 20px;
+	background: var(--bg-surface);
+	margin-bottom: 12px;
+}
+
+.faq summary {
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.faq details > div {
+	margin-top: 12px;
+	color: var(--text-secondary);
+	font-size: var(--text-sm);
+	line-height: var(--leading-relaxed);
+}
+
+.article {
+	max-width: 720px;
+	margin: 0 auto;
+	padding: 48px 24px 64px;
 }
 
 /* Rich text rendered by @draftbase/renderer's toHtml() */
+.db-content {
+	line-height: var(--leading-relaxed);
+}
+
 .db-content :is(h2, h3) {
 	margin-top: 2rem;
 }
@@ -115,6 +371,6 @@ footer.site {
 .db-content pre {
 	overflow-x: auto;
 	padding: 1rem;
-	background: rgba(127, 127, 127, 0.12);
-	border-radius: 8px;
+	background: var(--bg-sunken);
+	border-radius: var(--radius-md);
 }

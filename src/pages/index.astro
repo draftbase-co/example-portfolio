@@ -1,60 +1,140 @@
 ---
 import { toHtml } from "@draftbase/renderer";
 import Base from "../layouts/Base.astro";
-import { getAll, url, type Profile, type Project } from "../lib/draftbase";
+import { getAll, url, type Faq, type Profile, type Project } from "../lib/draftbase";
 
-const [profile] = await getAll<Profile>("profile");
-const projects = (await getAll<Project>("project")).sort(
-	(a, b) => (b.fields.year ?? 0) - (a.fields.year ?? 0),
-);
+const [[profile], projects, faqs] = await Promise.all([
+	getAll<Profile>("profile"),
+	getAll<Project>("project"),
+	getAll<Faq>("faq"),
+]);
+const sorted = projects.sort((a, b) => (b.fields.year ?? 0) - (a.fields.year ?? 0));
+const ordered = faqs.sort((a, b) => (a.fields.order ?? 0) - (b.fields.order ?? 0));
 const bio = profile ? await toHtml(profile.fields.bio) : "";
+const name = profile?.fields.name ?? "Portfolio";
+const site = new URL(url(), Astro.site).href;
+
+// Two blocks: who this page is about, and the questions it answers. Both are what an
+// answer engine quotes when it summarises the page.
+const schema: Record<string, unknown>[] = [
+	{
+		"@context": "https://schema.org",
+		"@type": "ProfilePage",
+		mainEntity: {
+			"@type": "Person",
+			name,
+			jobTitle: profile?.fields.headline,
+			description: profile?.fields.headline,
+			url: site,
+			email: profile?.fields.email ? `mailto:${profile.fields.email}` : undefined,
+			sameAs: [profile?.fields.githubUrl, profile?.fields.linkedinUrl].filter(Boolean),
+		},
+	},
+];
+if (ordered.length > 0) {
+	schema.push({
+		"@context": "https://schema.org",
+		"@type": "FAQPage",
+		mainEntity: ordered.map((faq) => ({
+			"@type": "Question",
+			name: faq.fields.question,
+			acceptedAnswer: { "@type": "Answer", text: faq.fields.answer },
+		})),
+	});
+}
 ---
 
-<Base title={profile?.fields.name ?? "Portfolio"} description={profile?.fields.headline}>
+<Base
+	title={`${name} — ${profile?.fields.headline ?? "Portfolio"}`}
+	description={profile?.fields.headline}
+	image={profile?.fields.avatar?.url}
+	ogType="profile"
+	name={name}
+	schema={schema}
+>
+	<section class="hero">
+		{
+			profile?.fields.avatar?.url && (
+				<img
+					src={profile.fields.avatar.url}
+					alt={profile.fields.avatar.altText ?? name}
+					width="96"
+					height="96"
+				/>
+			)
+		}
+		<div>
+			<h1>{name}</h1>
+			<p>{profile?.fields.headline}</p>
+			<a class="button" href="#work">View work</a>
+		</div>
+	</section>
+
+	<section id="work" class="wrap" style="padding-bottom:48px">
+		<h2 class="section-title">Selected work</h2>
+		<ul class="projects">
+			{
+				sorted.map((project) => (
+					<li class="project">
+						<a href={url(`projects/${project.fields.slug}`)}>
+							{project.fields.cover?.url && (
+								<img
+									src={project.fields.cover.url}
+									alt={project.fields.cover.altText ?? project.fields.title}
+									loading="lazy"
+								/>
+							)}
+							<div class="body">
+								<h3>{project.fields.title}</h3>
+								<p>
+									{project.fields.summary}
+									{project.fields.year && ` · ${project.fields.year}`}
+								</p>
+							</div>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+		{
+			sorted.length === 0 && (
+				<p class="muted">
+					No published projects yet. Run <code>npm run seed</code>.
+				</p>
+			)
+		}
+	</section>
+
+	<section id="about" class="panel">
+		<div>
+			<h2>About</h2>
+			<div class="db-content" set:html={bio} />
+		</div>
+	</section>
+
+	<section id="contact" class="faq" style="text-align:center;padding-bottom:0">
+		<h2>Get in touch</h2>
+		<p class="muted">Available for freelance and contract work.</p>
+		{
+			profile?.fields.email && (
+				<a class="button" href={`mailto:${profile.fields.email}`}>
+					{profile.fields.email}
+				</a>
+			)
+		}
+	</section>
+
 	{
-		profile && (
-			<header class="site">
-				{profile.fields.avatar?.url && (
-					<img
-						src={profile.fields.avatar.url}
-						alt={profile.fields.avatar.altText ?? profile.fields.name}
-					/>
-				)}
-				<div>
-					<h1>{profile.fields.name}</h1>
-					<p class="muted" style="margin:0">
-						{profile.fields.headline}
-					</p>
-				</div>
-			</header>
+		ordered.length > 0 && (
+			<section class="faq">
+				<h2 class="section-title">Frequently asked questions</h2>
+				{ordered.map((faq) => (
+					<details>
+						<summary>{faq.fields.question}</summary>
+						<div>{faq.fields.answer}</div>
+					</details>
+				))}
+			</section>
 		)
 	}
-
-	<div class="db-content" set:html={bio} />
-
-	<h2 style="margin-top:3rem">Work</h2>
-	<ul class="projects">
-		{
-			projects.map((project) => (
-				<li class="project">
-					<a href={url(`projects/${project.fields.slug}`)}>
-						{project.fields.cover?.url && (
-							<img
-								src={project.fields.cover.url}
-								alt={project.fields.cover.altText ?? project.fields.title}
-								loading="lazy"
-							/>
-						)}
-						<h2>{project.fields.title}</h2>
-						<p class="muted" style="margin:0">
-							{project.fields.summary}
-						</p>
-					</a>
-					{project.fields.year && <span class="tagline">{project.fields.year}</span>}
-				</li>
-			))
-		}
-	</ul>
-
-	{projects.length === 0 && <p class="muted">No published projects yet. Run <code>npm run seed</code>.</p>}
 </Base>

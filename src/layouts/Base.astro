@@ -5,9 +5,23 @@ import { url } from "../lib/draftbase";
 interface Props {
 	title: string;
 	description?: string;
+	image?: string | null;
+	ogType?: string;
+	/** JSON-LD blocks for this page. Emitted verbatim into <head>. */
+	schema?: Record<string, unknown>[];
+	name?: string;
 }
 
-const { title, description } = Astro.props;
+const {
+	title,
+	description,
+	image,
+	ogType = "website",
+	schema = [],
+	name = "Portfolio",
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const home = url();
 ---
 
 <!doctype html>
@@ -17,17 +31,54 @@ const { title, description } = Astro.props;
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>{title}</title>
 		{description && <meta name="description" content={description} />}
+		<link rel="canonical" href={canonical} />
+		<meta property="og:type" content={ogType} />
 		<meta property="og:title" content={title} />
+		<meta property="og:url" content={canonical} />
 		{description && <meta property="og:description" content={description} />}
-		<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
+		{image && <meta property="og:image" content={image} />}
+		<meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
+		{
+			schema.map((block) => (
+				<script
+					type="application/ld+json"
+					set:html={JSON.stringify(block)}
+					is:inline
+				/>
+			))
+		}
 	</head>
 	<body>
-		<div class="wrap">
-			<slot />
-			<footer class="site">
-				<a href={url()}>Home</a> · Content managed in
-				<a href="https://draftbase.co">Draftbase</a>
-			</footer>
+		<div class="banner">
+			Example project built with <a
+				href="https://draftbase.co"
+				target="_blank"
+				rel="noopener">Draftbase CMS</a
+			> — a starter you can customize.
 		</div>
+
+		<header class="site">
+			<div>
+				<a class="brand" href={home}>{name}</a>
+				<nav>
+					<a href={`${home}#work`}>Work</a>
+					<a href={`${home}#about`}>About</a>
+					<a href={`${home}#contact`}>Contact</a>
+				</nav>
+			</div>
+		</header>
+
+		<main><slot /></main>
+
+		<footer class="site">
+			<p>© {new Date().getFullYear()} {name}.</p>
+			<p>
+				Built as an example with <a
+					href="https://draftbase.co"
+					target="_blank"
+					rel="noopener">Draftbase CMS</a
+				>
+			</p>
+		</footer>
 	</body>
 </html>
