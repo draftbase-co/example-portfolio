@@ -1,0 +1,123 @@
+[
+	{
+		"key": "profile",
+		"name": "Profile",
+		"titleField": "name",
+		"fields": [
+			{
+				"key": "name",
+				"label": "Name",
+				"type": "text",
+				"required": true
+			},
+			{
+				"key": "headline",
+				"label": "Headline",
+				"type": "text",
+				"required": true
+			},
+			{
+				"key": "bio",
+				"label": "Bio",
+				"type": "richText"
+			},
+			{
+				"key": "avatar",
+				"label": "Avatar",
+				"type": "media"
+			},
+			{
+				"key": "email",
+				"label": "Email",
+				"type": "text"
+			},
+			{
+				"key": "githubUrl",
+				"label": "GitHub URL",
+				"type": "text"
+			},
+			{
+				"key": "linkedinUrl",
+				"label": "LinkedIn URL",
+				"type": "text"
+			}
+		]
+	},
+	{
+		"key": "project",
+		"name": "Project",
+		"titleField": "title",
+		"fields": [
+			{
+				"key": "title",
+				"label": "Title",
+				"type": "text",
+				"required": true
+			},
+			{
+				"key": "slug",
+				"label": "Slug",
+				"type": "text",
+				"required": true,
+				"isSlug": true
+			},
+			{
+				"key": "summary",
+				"label": "Summary",
+				"type": "text",
+				"multiline": true,
+				"maxLength": 200
+			},
+			{
+				"key": "body",
+				"label": "Body",
+				"type": "richText"
+			},
+			{
+				"key": "cover",
+				"label": "Cover image",
+				"type": "media"
+			},
+			{
+				"key": "liveUrl",
+				"label": "Live URL",
+				"type": "text"
+			},
+			{
+				"key": "year",
+				"label": "Year",
+				"type": "number"
+			},
+			{
+				"key": "featured",
+				"label": "Featured",
+				"type": "boolean"
+			}
+		]
+	},
+	{
+		"key": "faq",
+		"name": "Faq",
+		"titleField": "question",
+		"fields": [
+			{
+				"key": "question",
+				"label": "Question",
+				"type": "text",
+				"required": true
+			},
+			{
+				"key": "answer",
+				"label": "Answer",
+				"type": "text",
+				"multiline": true,
+				"required": true
+			},
+			{
+				"key": "order",
+				"label": "Order",
+				"type": "number"
+			}
+		]
+	}
+]
